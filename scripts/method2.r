@@ -9,10 +9,11 @@ library(ggplot2)
 simTweedieTest <-  
   function(N){ 
     t.test( 
-      rtweedie(N, mu=10000, phi=100, power=1.9), 
+      tweedie::rtweedie(N, mu=10000, phi=100, power=1.9), 
       mu=10000 
     )$p.value 
   } 
+
 
 
 # Assignment 2:  
@@ -32,7 +33,6 @@ df <-
 # --- Parallel computing ---
 library(parallel)
 library(doParallel)
-library(foreach)
 
 # Define number of cores to use
 Cores <- 4
@@ -42,16 +42,17 @@ cl <- makeCluster(Cores)
 registerDoParallel(cl)
 
 # Parallelize the loop
-results <- foreach(
+results <- 
+  foreach(
   i = 1:nrow(df), 
-  .combine = c) %dopar% 
-  {
+  .combine = c
+  ) %dopar% 
   MTweedieTests(
     N = df$N[i], 
     M = df$M[i], 
-    sig = 0.05)
-}
-
+    sig = 0.05
+    )
+  
 # Assign the results to df$share_reject
 df$share_reject <- results
 
