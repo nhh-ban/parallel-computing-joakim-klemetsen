@@ -11,7 +11,7 @@ library(ggplot2)
 simTweedieTest <-  
   function(N){ 
     t.test( 
-      rtweedie(N, mu=10000, phi=100, power=1.9), 
+      tweedie::rtweedie(N, mu=10000, phi=100, power=1.9), 
       mu=10000 
     )$p.value 
   } 
@@ -48,6 +48,9 @@ Cores <- 4
 # Register a parallel backend
 cl <- makeCluster(Cores)
 registerDoParallel(cl)
+
+# Export the simTweedieTest function to the workers
+clusterExport(cl, c("simTweedieTest"))
 
 for(i in 1:nrow(df)){ 
   df$share_reject[i] <-  
