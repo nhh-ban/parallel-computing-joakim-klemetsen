@@ -6,7 +6,7 @@ printTicTocLog <-
       tibble(logvals = .) %>%
       separate(logvals,
                sep = ":",
-               into = c("Function type", "log")) %>%
+               into = c("Method", "log")) %>%
       mutate(log = str_trim(log)) %>%
       separate(log,
                sep = " ",
